@@ -26,14 +26,19 @@ def scrape_list
     # Initializing the page to scrape
     if @input == "All"
       @page_to_scrape = "https://www.barnesandnoble.com/b/books/_/N-1fZ29Z8q8"
+      @label = " "
     elsif @input == "Teens&YA"
       @page_to_scrape = "https://www.barnesandnoble.com/b/books/teens-ya/_/N-1fZ29Z8q8Z19r4"
+      @label = " Teens & YA "
     elsif @input == "Kids"
       @page_to_scrape = "https://www.barnesandnoble.com/b/books/kids/_/N-1fZ29Z8q8Ztu1"
+      @label = " Kids "
     elsif @input == "Fiction"
       @page_to_scrape = "https://www.barnesandnoble.com/b/fiction/books/_/N-1fZ2usxZ29Z8q8"
+      @label = " Fiction "
     elsif @input == "NonFiction"
       @page_to_scrape = "https://www.barnesandnoble.com/b/nonfiction/books/_/N-1fZ2urcZ29Z8q8"
+      @label = " NonFiction "
     end
     if i != 1
       @page_to_scrape = @page_to_scrape + "?Nrpp=20&page=" + i.to_s
@@ -72,6 +77,7 @@ def scrape_list
     end
     i += 1
   end
+  puts "Here are the top 100 Best Selling#{@label}Books: "
   return @books
 end
 
@@ -108,7 +114,7 @@ def render_book_info
 
   puts table.render(:ascii)
 
-  @input = @prompt.select("Would you like to open the Barnes&Noble page for this book?", %w(Yes No))
+  @input = @prompt.select("Would you like to open the Barnes & Noble page for this book?", %w(Yes No))
 
   if @input == "Yes"
     Launchy.open("https://www.barnesandnoble.com#{selected_book[1]}")
@@ -124,7 +130,6 @@ puts "Welcome the Best Selling Books App!"
 @input = @prompt.select("Which best selling book list would you like to see today?", %w(All Teens&YA Kids Fiction NonFiction))
 
 while run_app
-  puts "Here are the top 100 Best Selling Books: "
   scrape_list()
 
   render_best_selling_books()
