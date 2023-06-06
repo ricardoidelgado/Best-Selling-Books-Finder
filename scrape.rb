@@ -127,17 +127,21 @@ while run_app
 
   render_best_selling_books()
 
-  puts "Please input a book number that you would like more information on or enter 'quit' to quit."
-  @input = gets.chomp
-  run_app = false
+  @input = prompt.ask("Please input a book number that you would like more information on or enter '0' to quit.") do |q|
+    q.in "0-100"
+    q.messages[:range?] = "%{value} out of expected range %{in}"
+  end
 
-  if @input.downcase == "quit"
-    run_app = false
-  else
+  while @input != "0"
     render_book_info()
 
-    puts "If there is another book you would like more info, please enter that number or enter 'quit' to quit."
-    @input = gets.chomp
+    @input = prompt.ask("If there is another book you would like more info, please enter that number or enter '0' to quit.") do |q|
+      q.in "0-100"
+      q.messages[:range?] = "%{value} out of expected range %{in}"
+    end
+  end
+  if @input == "0"
+    run_app = false
   end
 end
 
