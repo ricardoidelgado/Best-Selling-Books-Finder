@@ -2,7 +2,7 @@ require "nokogiri"
 require "httparty"
 
 # Defining data structure to store scraped data
-Book = Struct.new(:url, :title, :author, :price)
+Book = Struct.new(:rank, :url, :title, :author, :price)
 
 # Initializing the list of objects that will contain the scraped data
 books = []
@@ -30,9 +30,11 @@ while i <= limit
   # Selecting all HTML product elements
   html_products = document.css("li.pb-s")
 
+  index = 1 + ((i - 1) * 20)
   # Iterating over the list of HTML products
   html_products.each do |html_product|
     # Extracting the data of interest
+
     # URL of Book
     url = html_product.css("a").first.attribute("href").value
     # Name of Book
@@ -43,10 +45,12 @@ while i <= limit
     price = html_product.css("span.current a").first.text
 
     # Storing the scraped data in a Book object
-    book = Book.new(url, title, author, price)
+    book = Book.new(index, url, title, author, price)
 
     # Adding the book to the list of books
     books.push(book)
+
+    index += 1
   end
 
   i += 1
