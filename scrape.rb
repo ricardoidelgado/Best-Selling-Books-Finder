@@ -1,8 +1,9 @@
 require "nokogiri"
 require "httparty"
+require "tty-table"
 
 # Defining data structure to store scraped data
-Book = Struct.new(:rank, :url, :title, :author, :price)
+Book = Struct.new(:number, :url, :title, :author, :price)
 
 # Defining scrape function
 def scrape
@@ -59,6 +60,40 @@ def scrape
   return @books
 end
 
+def render_best_selling_books
+  header_array = ["Number", "Title", "Author", "Price"]
+  table_array = []
+  @books.each do |item|
+    temp_array = []
+    temp_array << item[0]
+    temp_array << item[2]
+    temp_array << item[3]
+    temp_array << item[4]
+    table_array << temp_array
+  end
+
+  table = TTY::Table.new(header_array, table_array)
+
+  puts table.render(:ascii)
+end
+
+def render_book_info
+  selected_book = @books[@input.to_i - 1]
+
+  header_array = ["Number", "Title", "Author", "Price"]
+  table_array = []
+  temp_array = []
+  temp_array << selected_book[0]
+  temp_array << selected_book[2]
+  temp_array << selected_book[3]
+  temp_array << selected_book[4]
+  table_array << temp_array
+
+  table = TTY::Table.new(header_array, table_array)
+
+  puts table.render(:ascii)
+end
+
 # START OF APP
 
 puts "Welcome the Best Selling Books App!"
@@ -66,26 +101,28 @@ puts "Welcome the Best Selling Books App!"
 run_app = true
 
 puts "Would you like to see the top 100 Best Selling books from Barnes & Noble today?"
-input = gets.chomp
+@input = gets.chomp
 
 while run_app
-  if input.downcase == "yes"
+  if @input.downcase == "yes"
     puts "Here are the top 100 Best Selling Books: "
     scrape()
-    pp @books
+
+    render_best_selling_books()
 
     puts "Please input a book number that you would like more information on or enter 'quit' to quit."
-    input = gets.chomp
+    @input = gets.chomp
   else
     run_app = false
   end
 
-  if input.downcase == "quit" || input.downcase == "no"
+  if @input.downcase == "quit" || @input.downcase == "no"
     run_app = false
   else
-    pp @books[input.to_i - 1]
+    render_book_info()
+
     puts "If there is another book you would like more info, please enter that number or enter 'quit' to quit."
-    input = gets.chomp
+    @input = gets.chomp
   end
 end
 
