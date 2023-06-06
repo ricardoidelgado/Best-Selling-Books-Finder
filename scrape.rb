@@ -8,7 +8,7 @@ require "tty-prompt"
 Book = Struct.new(:number, :url, :title, :author, :price)
 
 # Initializing Prompt
-prompt = TTY::Prompt.new
+@prompt = TTY::Prompt.new
 
 # Defining scrape function
 def scrape_list
@@ -108,9 +108,11 @@ def render_book_info
 
   puts table.render(:ascii)
 
-  puts "Your browser will open to the page with more info for the selected book."
+  @input = @prompt.select("Would you like to open the Barnes&Noble page for this book?", %w(Yes No))
 
-  Launchy.open("https://www.barnesandnoble.com#{selected_book[1]}")
+  if @input == "Yes"
+    Launchy.open("https://www.barnesandnoble.com#{selected_book[1]}")
+  end
 end
 
 # START OF APP
@@ -119,7 +121,7 @@ run_app = true
 
 puts "Welcome the Best Selling Books App!"
 
-@input = prompt.select("Which best selling book list would you like to see today?", %w(All Teens&YA Kids Fiction NonFiction))
+@input = @prompt.select("Which best selling book list would you like to see today?", %w(All Teens&YA Kids Fiction NonFiction))
 
 while run_app
   puts "Here are the top 100 Best Selling Books: "
@@ -127,7 +129,7 @@ while run_app
 
   render_best_selling_books()
 
-  @input = prompt.ask("Please input a book number that you would like more information on or enter '0' to quit.") do |q|
+  @input = @prompt.ask("Please input a book number that you would like more information on or enter '0' to quit.") do |q|
     q.in "0-100"
     q.messages[:range?] = "%{value} out of expected range %{in}"
   end
@@ -135,7 +137,7 @@ while run_app
   while @input != "0"
     render_book_info()
 
-    @input = prompt.ask("If there is another book you would like more info, please enter that number or enter '0' to quit.") do |q|
+    @input = @prompt.ask("If there is another book you would like more info, please enter that number or enter '0' to quit.") do |q|
       q.in "0-100"
       q.messages[:range?] = "%{value} out of expected range %{in}"
     end
