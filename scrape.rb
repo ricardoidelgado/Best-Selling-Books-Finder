@@ -2,9 +2,13 @@ require "nokogiri"
 require "httparty"
 require "tty-table"
 require "launchy"
+require "tty-prompt"
 
 # Defining data structure to store scraped data
 Book = Struct.new(:number, :url, :title, :author, :price)
+
+# Initializing Prompt
+prompt = TTY::Prompt.new
 
 # Defining scrape function
 def scrape_list
@@ -20,13 +24,23 @@ def scrape_list
   # Iterate over the 5 pages
   while i <= limit
     # Initializing the page to scrape
-    page_to_scrape = "https://www.barnesandnoble.com/b/books/_/N-1fZ29Z8q8"
+    if @input == "All"
+      @page_to_scrape = "https://www.barnesandnoble.com/b/books/_/N-1fZ29Z8q8"
+    elsif @input == "Teens&YA"
+      @page_to_scrape = "https://www.barnesandnoble.com/b/books/teens-ya/_/N-1fZ29Z8q8Z19r4"
+    elsif @input == "Kids"
+      @page_to_scrape = "https://www.barnesandnoble.com/b/books/kids/_/N-1fZ29Z8q8Ztu1"
+    elsif @input == "Fiction"
+      @page_to_scrape = "https://www.barnesandnoble.com/b/fiction/books/_/N-1fZ2usxZ29Z8q8"
+    elsif @input == "NonFiction"
+      @page_to_scrape = "https://www.barnesandnoble.com/b/nonfiction/books/_/N-1fZ2urcZ29Z8q8"
+    end
     if i != 1
-      page_to_scrape = page_to_scrape + "?Nrpp=20&page=" + i.to_s
+      @page_to_scrape = @page_to_scrape + "?Nrpp=20&page=" + i.to_s
     end
 
     # Downloading the target web page
-    response = HTTParty.get(page_to_scrape)
+    response = HTTParty.get(@page_to_scrape)
 
     # Parsing the HTML document returned by the server
     document = Nokogiri::HTML(response.body)
@@ -101,27 +115,23 @@ end
 
 # START OF APP
 
-puts "Welcome the Best Selling Books App!"
-
 run_app = true
 
-puts "Would you like to see the top 100 Best Selling books from Barnes & Noble today?"
-@input = gets.chomp
+puts "Welcome the Best Selling Books App!"
+
+@input = prompt.select("Which best selling book list would you like to see today?", %w(All Teens&YA Kids Fiction NonFiction))
 
 while run_app
-  if @input.downcase == "yes"
-    puts "Here are the top 100 Best Selling Books: "
-    scrape_list()
+  puts "Here are the top 100 Best Selling Books: "
+  scrape_list()
 
-    render_best_selling_books()
+  render_best_selling_books()
 
-    puts "Please input a book number that you would like more information on or enter 'quit' to quit."
-    @input = gets.chomp
-  else
-    run_app = false
-  end
+  puts "Please input a book number that you would like more information on or enter 'quit' to quit."
+  @input = gets.chomp
+  run_app = false
 
-  if @input.downcase == "quit" || @input.downcase == "no"
+  if @input.downcase == "quit"
     run_app = false
   else
     render_book_info()
