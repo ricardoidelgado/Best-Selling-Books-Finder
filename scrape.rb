@@ -1,12 +1,13 @@
 require "nokogiri"
 require "httparty"
 require "tty-table"
+require "launchy"
 
 # Defining data structure to store scraped data
 Book = Struct.new(:number, :url, :title, :author, :price)
 
 # Defining scrape function
-def scrape
+def scrape_list
   # Initializing the list of objects that will contain the scraped data
   @books = []
 
@@ -92,6 +93,10 @@ def render_book_info
   table = TTY::Table.new(header_array, table_array)
 
   puts table.render(:ascii)
+
+  puts "Your browser will open to the page with more info for the selected book."
+
+  Launchy.open("https://www.barnesandnoble.com#{selected_book[1]}")
 end
 
 # START OF APP
@@ -106,7 +111,7 @@ puts "Would you like to see the top 100 Best Selling books from Barnes & Noble t
 while run_app
   if @input.downcase == "yes"
     puts "Here are the top 100 Best Selling Books: "
-    scrape()
+    scrape_list()
 
     render_best_selling_books()
 
