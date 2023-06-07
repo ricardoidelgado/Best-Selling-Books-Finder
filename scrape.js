@@ -1,88 +1,81 @@
 const puppeteer = require('puppeteer');
-const fs = require("fs");
 // const prompt = require('prompt-sync')();
 // const open = require('open');
 
-let retry = 0;
-let maxRetries = 5;
-
-let pokedex = {};
-
-(async function scrape() {
-  // retry++;
-
-  const browser = await puppeteer.launch({headless: false});     
-  try {
-    // scraping logic comes here...
-    const page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4298.0 Safari/537.36');
-
-    await page.goto('https://www.barnesandnoble.com/w/fourth-wing-rebecca-yarros/1142297916?ean=9781649374042');
-
-    await page.waitForSelector('section');
-
-    // Gather rating
-    const name = await page.$$eval("div.bv_avgRating_component_container", (nodes) => nodes.map((n) => 
-    n.innerText)
-    );
 
 
-    // const nameObject = name.map((value, index) => {
-    //   if (name[index]) {
-    //     return name[index]
-    //   } else {
-    //     return "IDK";
-    //   }
-    // })
+function scrapeList() {
+  (async function scrape() {
+  
+    const browser = await puppeteer.launch({headless: true});     
+    try {
+      // scraping logic comes here...
+      const page = await browser.newPage();
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4298.0 Safari/537.36');
+  
+      await page.goto('https://www.barnesandnoble.com/b/books/_/N-1fZ29Z8q8');
+  
+      await page.waitForSelector('ol');
 
-    // let names = {};
-    // let index = 1
-    // for (const property in nameObject) {
-    //   if (nameObject[property] !== "IDK") {
-    //     names[index] = nameObject[property].substring(0,nameObject[property].length - 1);
-    //     index++;
-    //   }
-    // }
-    console.log(name);
+      // Name of Book
+      const names = await page.$$eval("h3.product-info-title a", (nodes) => nodes.map((n) => 
+      n.innerText)
+      );
 
-    //READ THIS: I successfully get the id and name. Thoughts on how to continue...
-    // If I want to keep using web scraping, one thought would be to have this information stored, prompt the user to enter the Id of a pokemon go to their respective page, and try to scrape out some more information...
+      // URL of Book
+      const urls = await page.$$eval("h3.product-info-title a", (nodes) => nodes.map((n) => 
+      n.href)
+      );
 
-    // let pokemonId = prompt("Please select a the id of a pokemon: ");
-    // pokemonId = parseInt(pokemonId);
-    // let chosenPokemon = names[pokemonId].toLowerCase();
+      // Author of Book
+      const authors = await page.$$eval("div.product-shelf-author", (nodes) => nodes.slice(0, 20).map((n) => 
+      n.querySelector("a").innerText)
+      );
 
-    // const chosenPokemonURL = `https://www.serebii.net/pokedex-sv/${chosenPokemon}/`
+      // Price of Book
+      const prices = await page.$$eval("span.current a", (nodes) => nodes.map((n) => 
+      n.innerText)
+      );
 
-    // open(chosenPokemonURL);
+      // Rating of Book
+      const ratings = await page.$$eval("div.bv-off-screen", (nodes) => nodes.map((n) => 
+      n.innerText)
+      );
+  
+      await browser.close();
+  
+      } catch (e) {
+      await browser.close();
+      console.log("Error: ", e);
+    }
+  })();
+}
 
-    // const page2 = await browser.newPage();
+scrapeList()
 
-    // await page2.goto(chosenPokemonURL);
-
-    // await page2.waitForSelector('.center');
-
-
-    // The goal now is to attempt to make a terminal Pokedex
-    // const data = await page2.$$eval("td.cen a", (nodes) => nodes.map((n) => n.innerText)
-    // );
-
-    // console.log(data);
-
-    // The below code is to save the information into a JSON file.
-
-    // const jsonData = JSON.stringify(names, null, 2);
-    // fs.writeFileSync("pokemon.json", jsonData);
-
-    await browser.close();
-
-    } catch (e) {
-    await browser.close();
-    console.log("Error: ", e);
-    // if (retry < maxRetries) {
-    //   scrape();
-    // }
-  }
-})();
-
-
+// function scrapeBook() {
+//   (async function scrape() {
+  
+//     const browser = await puppeteer.launch({headless: false});     
+//     try {
+//       // scraping logic comes here...
+//       const page = await browser.newPage();
+//       await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4298.0 Safari/537.36');
+  
+//       await page.goto('https://www.barnesandnoble.com/w/fourth-wing-rebecca-yarros/1142297916?ean=9781649374042');
+  
+//       await page.waitForSelector('section');
+  
+//       // Gather rating
+//       const name = await page.$$eval("div.bv_avgRating_component_container", (nodes) => nodes.map((n) => 
+//       n.innerText)
+//       );
+    
+//       await browser.close();
+  
+//       } catch (e) {
+//       await browser.close();
+//       console.log("Error: ", e);
+//     }
+//   })();
+// }
