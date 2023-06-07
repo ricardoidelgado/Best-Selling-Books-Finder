@@ -1,9 +1,10 @@
 const puppeteer = require('puppeteer');
-// const prompt = require('prompt-sync')();
+const prompt = require('prompt-sync')();
 // const open = require('open');
 
 class Book {
-  constructor(index, title, url, author, price, rating) {
+  constructor(rank, title, url, author, price, rating) {
+    this.rank = rank;
     this.title = title;
     this.url = url;
     this.author = author;
@@ -55,11 +56,11 @@ function scrapeList() {
       let books = [];
 
       for (let i = 0; i < titles.length; i++) {
-        let book = new Book(i, titles[i], urls[i], authors[i], prices[i], ratings[i]);
+        let book = new Book(i+1, titles[i], urls[i], authors[i], prices[i], ratings[i]);
         books.push(book);
       }
 
-      return books;
+      console.table(books,["rank", "title", "author", "price", "rating"]);
   
       } catch (e) {
       await browser.close();
@@ -69,6 +70,21 @@ function scrapeList() {
 }
 
 scrapeList();
+
+let runApp = true;
+
+console.log("Welcome to the Best Selling Books App!");
+
+let input = prompt("Would you like to begin? ");
+
+while (runApp) {
+  if (input.toLowerCase === "yes") {
+    scrapeList();
+  }
+  console.log("Running");
+
+  runApp = false;
+}
 
 // function scrapeBook() {
 //   (async function scrape() {

@@ -123,7 +123,7 @@ end
 
 run_app = true
 
-puts "Welcome the Best Selling Books App!"
+puts "Welcome to the Best Selling Books App!"
 
 @input = @prompt.select("Which best selling book list would you like to see today?", %w(All Teens&YA Kids Fiction NonFiction))
 
