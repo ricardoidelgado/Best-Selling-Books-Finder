@@ -99,15 +99,13 @@ def render_best_selling_books
 end
 
 def render_book_info
-  selected_book = @books[@input.to_i - 1]
-
   header_array = ["Number", "Title", "Author", "Price"]
   table_array = []
   temp_array = []
-  temp_array << selected_book[0]
-  temp_array << selected_book[2]
-  temp_array << selected_book[3]
-  temp_array << selected_book[4]
+  temp_array << @selected_book[0]
+  temp_array << @selected_book[2]
+  temp_array << @selected_book[3]
+  temp_array << @selected_book[4]
   table_array << temp_array
 
   table = TTY::Table.new(header_array, table_array)
@@ -117,7 +115,7 @@ def render_book_info
   @input = @prompt.select("Would you like to open the Barnes & Noble page for this book?", %w(Yes No))
 
   if @input == "Yes"
-    Launchy.open("https://www.barnesandnoble.com#{selected_book[1]}")
+    Launchy.open("https://www.barnesandnoble.com#{@selected_book[1]}")
   end
 end
 
@@ -140,6 +138,7 @@ while run_app
   end
 
   while @input != "0"
+    @selected_book = @books[@input.to_i - 1]
     render_book_info()
 
     @input = @prompt.ask("If there is another book you would like more info, please enter that number or enter '0' to quit.") do |q|
