@@ -23,7 +23,22 @@ function scrapeList() {
 
   console.log("Welcome to the Best Selling Books App!");
 
-  let input = prompt("Would you like to begin? ");
+  let input = prompt("Which best selling book list would you like to see today? Please enter: 'All', 'Teens&YA', 'Kids', 'Fiction', or 'NonFiction'");
+
+  let selectedURL = "";
+
+  if (input.toLowerCase() === "all") {
+    selectedURL = "https://www.barnesandnoble.com/b/books/_/N-1fZ29Z8q8";
+  } else if (input.toLowerCase() === "teens&ya") {
+    selectedURL = "https://www.barnesandnoble.com/b/books/teens-ya/_/N-1fZ29Z8q8Z19r4";
+  } else if (input.toLowerCase() === "kids") {
+    selectedURL = "https://www.barnesandnoble.com/b/books/kids/_/N-1fZ29Z8q8Ztu1";
+  } else if (input.toLowerCase() === "fiction") {
+    selectedURL = "https://www.barnesandnoble.com/b/fiction/books/_/N-1fZ2usxZ29Z8q8";
+  } else if (input.toLowerCase() === "nonfiction") {
+    selectedURL = "https://www.barnesandnoble.com/b/nonfiction/books/_/N-1fZ2urcZ29Z8q8";
+  }
+  console.log(selectedURL);
 
   (async function scrape() {
   
@@ -33,7 +48,7 @@ function scrapeList() {
       const page = await browser.newPage();
       await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4298.0 Safari/537.36');
   
-      await page.goto('https://www.barnesandnoble.com/b/books/_/N-1fZ29Z8q8');
+      await page.goto(selectedURL);
   
       await page.waitForSelector('ol');
 
