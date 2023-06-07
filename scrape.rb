@@ -78,7 +78,6 @@ def scrape_list
     i += 1
   end
   puts "Here are the top 100 Best Selling#{@label}Books: "
-  return @books
 end
 
 def render_best_selling_books

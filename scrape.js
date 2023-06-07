@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const prompt = require('prompt-sync')();
-// const open = require('open');
+const open = require('open');
 
 class Book {
   constructor(rank, title, url, author, price, rating) {
@@ -13,7 +13,18 @@ class Book {
   }
 }
 
+var books = [];
+
 function scrapeList() {
+
+  // START OF APP
+
+  let runApp = true;
+
+  console.log("Welcome to the Best Selling Books App!");
+
+  let input = prompt("Would you like to begin? ");
+
   (async function scrape() {
   
     const browser = await puppeteer.launch({headless: true});     
@@ -53,14 +64,34 @@ function scrapeList() {
   
       await browser.close();
 
-      let books = [];
-
       for (let i = 0; i < titles.length; i++) {
         let book = new Book(i+1, titles[i], urls[i], authors[i], prices[i], ratings[i]);
         books.push(book);
       }
 
       console.table(books,["rank", "title", "author", "price", "rating"]);
+
+      while (runApp) {
+
+        input = prompt("Please input a book number that you would like more information on or enter 'quit' to quit.");
+
+        while (input.toLowerCase() !== "quit") {
+          let selectedBook = books[parseInt(input) - 1];
+          // console.table(selectedBook,["rank", "title", "author", "price", "rating"]);
+
+          input = prompt("Would you like to open the Barnes & Noble page for this book?");
+
+          if (input.toLowerCase() === "yes") {
+            await open(selectedBook["url"]);
+          }
+
+          input = prompt("If there is another book you would like more info, please enter that number or enter 'quit' to quit.");
+        }
+
+        if (input === "quit") {
+          runApp = false;
+        }
+      }
   
       } catch (e) {
       await browser.close();
@@ -69,46 +100,6 @@ function scrapeList() {
   })();
 }
 
+
+
 scrapeList();
-
-let runApp = true;
-
-console.log("Welcome to the Best Selling Books App!");
-
-let input = prompt("Would you like to begin? ");
-
-while (runApp) {
-  if (input.toLowerCase === "yes") {
-    scrapeList();
-  }
-  console.log("Running");
-
-  runApp = false;
-}
-
-// function scrapeBook() {
-//   (async function scrape() {
-  
-//     const browser = await puppeteer.launch({headless: false});     
-//     try {
-//       // scraping logic comes here...
-//       const page = await browser.newPage();
-//       await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4298.0 Safari/537.36');
-  
-//       await page.goto('https://www.barnesandnoble.com/w/fourth-wing-rebecca-yarros/1142297916?ean=9781649374042');
-  
-//       await page.waitForSelector('section');
-  
-//       // Gather rating
-//       const name = await page.$$eval("div.bv_avgRating_component_container", (nodes) => nodes.map((n) => 
-//       n.innerText)
-//       );
-    
-//       await browser.close();
-  
-//       } catch (e) {
-//       await browser.close();
-//       console.log("Error: ", e);
-//     }
-//   })();
-// }
