@@ -2,7 +2,15 @@ const puppeteer = require('puppeteer');
 // const prompt = require('prompt-sync')();
 // const open = require('open');
 
-
+class Book {
+  constructor(index, title, url, author, price, rating) {
+    this.title = title;
+    this.url = url;
+    this.author = author;
+    this.price = price;
+    this.rating = rating;
+  }
+}
 
 function scrapeList() {
   (async function scrape() {
@@ -17,8 +25,8 @@ function scrapeList() {
   
       await page.waitForSelector('ol');
 
-      // Name of Book
-      const names = await page.$$eval("h3.product-info-title a", (nodes) => nodes.map((n) => 
+      // Title of Book
+      const titles = await page.$$eval("h3.product-info-title a", (nodes) => nodes.map((n) => 
       n.innerText)
       );
 
@@ -43,6 +51,15 @@ function scrapeList() {
       );
   
       await browser.close();
+
+      let books = [];
+
+      for (let i = 0; i < titles.length; i++) {
+        let book = new Book(i, titles[i], urls[i], authors[i], prices[i], ratings[i]);
+        books.push(book);
+      }
+
+      return books;
   
       } catch (e) {
       await browser.close();
@@ -51,7 +68,7 @@ function scrapeList() {
   })();
 }
 
-scrapeList()
+scrapeList();
 
 // function scrapeBook() {
 //   (async function scrape() {
