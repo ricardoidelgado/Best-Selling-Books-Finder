@@ -38,7 +38,6 @@ function scrapeList() {
   } else if (input.toLowerCase() === "nonfiction") {
     selectedURL = "https://www.barnesandnoble.com/b/nonfiction/books/_/N-1fZ2urcZ29Z8q8";
   }
-  console.log(selectedURL);
 
   (async function scrape() {
   
@@ -114,7 +113,5 @@ function scrapeList() {
     }
   })();
 }
-
-
 
 scrapeList();
