@@ -97,9 +97,6 @@ function scrapeList() {
       console.log(`Here are the top 20 Best Selling${label}Books: `);
       console.table(transformed,["title", "author", "price", "rating"]);
 
-
- 
-
       while (runApp) {
 
         input = prompt("Please input a book number that you would like more information on or enter 'quit' to quit. ");
@@ -153,7 +150,7 @@ function scrapeList() {
                 console.log(`Rating: ${custReviewRating[i]}`);
                 console.log(`Review Title: ${custReviewTitle[i]}`);
                 console.log(`Review: ${custReviewText[i]}`);
-                console.log("--------------------------------")
+                console.log("--------------------------------");
               }
             } catch (e) {
               await browser.close();
