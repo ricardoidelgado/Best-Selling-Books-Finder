@@ -23,7 +23,7 @@ The three libraries used are Puppeteer, Prompt-sync and Open.
 ```bash
 npm install puppeteer
 npm install prompt-sync
-npm i open@8.4.2
+npm install open@8.4.2
 ```
 
 If interested in the Ruby version, the gems used are Nokogiri, HTTParty, TTY-Table, Launchy, and TTY-Prompt.
