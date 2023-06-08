@@ -109,6 +109,59 @@ function scrapeList() {
           
           console.table([selectedBook],["title", "author", "price", "rating"]);
 
+          // Scraping Logic for individual page
+          await (async function scrape() {
+  
+            const browser = await puppeteer.launch({headless: true});     
+            try {
+              // scraping logic comes here...
+              const page = await browser.newPage();
+              await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4298.0 Safari/537.36');
+          
+              await page.goto(selectedBook["url"]);
+          
+              await page.waitForSelector('ol');
+        
+              // custReviewAuthor of Book
+              const custReviewAuthor = await page.$$eval("div.bv-author-avatar div.bv-content-author-name button.bv-author h3", (nodes) => nodes.map((n) => 
+                n.innerText)
+              );
+
+              // custReviewRating of Book
+              const custReviewRating = await page.$$eval("span.bv-rating-stars-container span.bv-off-screen", (nodes) => nodes.map((n) => 
+                n.innerText)
+              );
+
+              // custReviewTitle of Book
+              const custReviewTitle = await page.$$eval("div.bv-content-title-container h3.bv-content-title", (nodes) => nodes.map((n) => 
+                n.innerText)
+              );
+
+              // custReviewText of Book
+              const custReviewText = await page.$$eval("div.bv-content-summary-body-text p", (nodes) => nodes.map((n) => 
+                n.innerText)
+              );
+
+              await browser.close();
+
+              if (custReviewAuthor.length === 0) {
+                console.log("There appears to be no reviews for this book yet.");
+              }
+
+              for (let i = 0; i < custReviewAuthor.length; i++) {
+                console.log(`Name: ${custReviewAuthor[i]}`);
+                console.log(`Rating: ${custReviewRating[i]}`);
+                console.log(`Review Title: ${custReviewTitle[i]}`);
+                console.log(`Review: ${custReviewText[i]}`);
+                console.log("--------------------------------")
+              }
+            } catch (e) {
+              await browser.close();
+              console.log("Error: ", e);
+            }
+          })();
+          // End of Individual Scraping
+
           input = prompt("Would you like to open the Barnes & Noble page for this book? Please enter: 'Yes' or 'No': ");
 
           if (input.toLowerCase() === "yes") {
