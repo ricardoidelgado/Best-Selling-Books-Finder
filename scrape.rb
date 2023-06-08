@@ -149,13 +149,3 @@ while run_app
     run_app = false
   end
 end
-
-# Prints the result in a CSV File
-# # Defining the header row of the CSV file
-# csv_headers = ["url", "title", "author", "price"]
-# CSV.open("output.csv", "wb", write_headers: true, headers: csv_headers) do |csv|
-#   # Adding each book as a new row to the CSV File
-#   books.each do |book|
-#     csv << book
-#   end
-# end

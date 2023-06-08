@@ -23,20 +23,26 @@ function scrapeList() {
 
   console.log("Welcome to the Best Selling Books App!");
 
-  let input = prompt("Which best selling book list would you like to see today? Please enter: 'All', 'Teens&YA', 'Kids', 'Fiction', or 'NonFiction'");
+  let input = prompt("Which best selling book list would you like to see today? Please enter: 'All', 'Teens&YA', 'Kids', 'Fiction', or 'NonFiction': ");
 
   let selectedURL = "";
+  let label = "";
 
   if (input.toLowerCase() === "all") {
     selectedURL = "https://www.barnesandnoble.com/b/books/_/N-1fZ29Z8q8";
+    label = " ";
   } else if (input.toLowerCase() === "teens&ya") {
     selectedURL = "https://www.barnesandnoble.com/b/books/teens-ya/_/N-1fZ29Z8q8Z19r4";
+    label = " Teens&YA ";
   } else if (input.toLowerCase() === "kids") {
     selectedURL = "https://www.barnesandnoble.com/b/books/kids/_/N-1fZ29Z8q8Ztu1";
+    label = " Kids ";
   } else if (input.toLowerCase() === "fiction") {
     selectedURL = "https://www.barnesandnoble.com/b/fiction/books/_/N-1fZ2usxZ29Z8q8";
+    label = " Fiction ";
   } else if (input.toLowerCase() === "nonfiction") {
     selectedURL = "https://www.barnesandnoble.com/b/nonfiction/books/_/N-1fZ2urcZ29Z8q8";
+    label = " NonFiction ";
   }
 
   (async function scrape() {
@@ -53,53 +59,63 @@ function scrapeList() {
 
       // Title of Book
       const titles = await page.$$eval("h3.product-info-title a", (nodes) => nodes.map((n) => 
-      n.innerText)
+        n.innerText)
       );
 
       // URL of Book
       const urls = await page.$$eval("h3.product-info-title a", (nodes) => nodes.map((n) => 
-      n.href)
+        n.href)
       );
 
       // Author of Book
       const authors = await page.$$eval("div.product-shelf-author", (nodes) => nodes.slice(0, 20).map((n) => 
-      n.querySelector("a").innerText)
+        n.querySelector("a").innerText)
       );
 
       // Price of Book
       const prices = await page.$$eval("span.current a", (nodes) => nodes.map((n) => 
-      n.innerText)
+        n.innerText)
       );
 
       // Rating of Book
       const ratings = await page.$$eval("div.bv-off-screen", (nodes) => nodes.map((n) => 
-      n.innerText)
+        n.innerText)
       );
   
       await browser.close();
 
       for (let i = 0; i < titles.length; i++) {
-        let book = new Book(i+1, titles[i], urls[i], authors[i], prices[i], ratings[i]);
+        let book = new Book(i + 1, titles[i], urls[i], authors[i], prices[i], ratings[i]);
         books.push(book);
       }
 
-      console.table(books,["rank", "title", "author", "price", "rating"]);
+      // Using the rank as the table id instead of the default id
+      const transformed = books.reduce((acc, {rank, ...x}) => {
+        acc[rank] = x; return acc;
+      }, {});
+
+      console.log(`Here are the top 20 Best Selling${label}Books: `);
+      console.table(transformed,["title", "author", "price", "rating"]);
+
+
+ 
 
       while (runApp) {
 
-        input = prompt("Please input a book number that you would like more information on or enter 'quit' to quit.");
+        input = prompt("Please input a book number that you would like more information on or enter 'quit' to quit. ");
 
         while (input.toLowerCase() !== "quit") {
-          let selectedBook = books[parseInt(input) - 1];
-          // console.table(selectedBook,["rank", "title", "author", "price", "rating"]);
+          let selectedBook = transformed[parseInt(input)];
+          
+          console.table([selectedBook],["title", "author", "price", "rating"]);
 
-          input = prompt("Would you like to open the Barnes & Noble page for this book?");
+          input = prompt("Would you like to open the Barnes & Noble page for this book? Please enter: 'Yes' or 'No': ");
 
           if (input.toLowerCase() === "yes") {
             await open(selectedBook["url"]);
           }
 
-          input = prompt("If there is another book you would like more info, please enter that number or enter 'quit' to quit.");
+          input = prompt("If there is another book you would like more info, please enter that number or enter 'quit' to quit. ");
         }
 
         if (input === "quit") {
@@ -107,7 +123,7 @@ function scrapeList() {
         }
       }
   
-      } catch (e) {
+    } catch (e) {
       await browser.close();
       console.log("Error: ", e);
     }
