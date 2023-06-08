@@ -12,6 +12,12 @@ This caused me to recreate this app using Puppeteer for JavaScript where I was a
 
 ## Installation
 
+Ensure you have Node.js and Ruby installed. You can find official installation documents here:
+
+Node.js - https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+<br>
+Ruby - https://www.ruby-lang.org/en/documentation/installation/
+
 The three libraries used are Puppeteer, Prompt-sync and Open.
 
 ```bash
@@ -33,6 +39,6 @@ gem install tty-prompt
 
 For any suggestions or improvements for either the Ruby of JavaScript version of this app, please feel free to contact me.
 
-Email - rickydel19@gmail.com
-<br>
+Ricardo Delgado - rickydel19@gmail.com
+
 [LinkedIn](https://www.linkedin.com/in/ricardodelgado1/)
