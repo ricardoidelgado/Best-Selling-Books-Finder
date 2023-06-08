@@ -8,7 +8,7 @@ I wanted to find a way to scrape the best selling books and see the relevant inf
 
 Initially, I created a Ruby script using the Nokogiri gem for this process. While it was able to scrape some information (URL, Title, Author, and Price), I encountered issues trying to scrape the rating of the book and the reviews from an individual books page.
 
-This cause me to recreate this app using Puppeteer for JavaScript where I was able to successfully scrape more information on each book. 
+This caused me to recreate this app using Puppeteer for JavaScript where I was able to successfully scrape more information on each book. 
 
 ## Installation
 
@@ -29,3 +29,10 @@ gem install tty-table
 gem install launchy
 gem install tty-prompt
 ```
+## Contact
+
+For any suggestions or improvements for either the Ruby of JavaScript version of this app, please feel free to contact me.
+
+Email - rickydel19@gmail.com
+<br>
+[LinkedIn](https://www.linkedin.com/in/ricardodelgado1/)
