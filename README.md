@@ -1,4 +1,4 @@
-# Best-Selling-Books-App
+# Best Selling Books Finder
 
 A terminal application for looking up the best selling books on Barnes & Noble using Puppeteer with Node.js.
 
