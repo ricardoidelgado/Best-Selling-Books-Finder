@@ -77,7 +77,7 @@ def scrape_list
     end
     i += 1
   end
-  puts "Here are the top 100 Best Selling#{@label}Books: "
+  puts "Here are the top 100 Best-Selling#{@label}Books: "
 end
 
 def render_best_selling_books
@@ -122,9 +122,9 @@ end
 
 run_app = true
 
-puts "Welcome to the Best Selling Books Finder!"
+puts "Welcome to the Best-Selling Books Finder!"
 
-@input = @prompt.select("Which best selling book list would you like to see today?", %w(All Teens&YA Kids Fiction NonFiction))
+@input = @prompt.select("Which best-selling book list would you like to see today?", %w(All Teens&YA Kids Fiction NonFiction))
 
 while run_app
   scrape_list()

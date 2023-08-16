@@ -20,10 +20,10 @@ function scrapeList() {
 
   let runApp = true;
 
-  console.log("Welcome to the Best Selling Books Finder!");
+  console.log("Welcome to the Best-Selling Books Finder!");
 
   let input = prompt(
-    "Which best selling book list would you like to see today? Please enter: 'All', 'Teens&YA', 'Kids', 'Fiction', or 'NonFiction': "
+    "Which best-selling book list would you like to see today? Please enter: 'All', 'Teens&YA', 'Kids', 'Fiction', or 'NonFiction': "
   );
 
   let selectedURL = "";
@@ -108,7 +108,7 @@ function scrapeList() {
         return acc;
       }, {});
 
-      console.log(`Here are the top 20 Best Selling${label}Books: `);
+      console.log(`Here are the top 20 Best-Selling${label}Books: `);
       console.table(transformed, ["title", "author", "price", "rating"]);
 
       while (runApp) {
